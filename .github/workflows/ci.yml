@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: nacova_root_password
+          MYSQL_DATABASE: nacova_test
+          MYSQL_USER: nacova
+          MYSQL_PASSWORD: nacova_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -u nacova -pnacova_password"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DATABASE_URL: mysql://nacova:nacova_password@127.0.0.1:3306/nacova_test
+      AUTH_SECRET: ci-test-secret-do-not-use-in-prod-32chars
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+      - run: npm --prefix backend install --legacy-peer-deps
+      - run: npm --prefix frontend install --legacy-peer-deps
+      - run: npm run db:generate
+      - run: npm run db:push
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:unit
+      - run: npm run build

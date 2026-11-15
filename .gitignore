@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+/backend/node_modules
+/frontend/node_modules
+
+# builds
+/backend/dist
+/frontend/dist
+/coverage
+/test-results
+/playwright-report
+
+# env files
+.env*
+!.env.example
+
+# runtime storage
+/uploads/
+/backups/
+
+# AI / agent tooling & local design source
+.claude/
+.cursor/
+.gemini/
+CLAUDE.md
+AGENTS.md
+*.figcraft
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+npm-debug.log*
+omp-session-*.html
+Sistem Manajemen Operasional Sablon Nacova - Scrum Kick-off.pdf

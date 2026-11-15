@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: nacova-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: nacova_root_password
+      MYSQL_DATABASE: nacova
+      MYSQL_USER: nacova
+      MYSQL_PASSWORD: nacova_password
+      TZ: UTC
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - nacova_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "nacova", "-pnacova_password"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  nacova_mysql_data:
