@@ -1,30 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { AuthProvider, ProtectedRoute, useAuth } from "@/lib/auth-context";
+import { AuthProvider, ProtectedRoute } from "@/lib/auth-context";
+import { AppShell } from "@/components/layout/AppShell";
 import { LoginPage } from "@/pages/LoginPage";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-function SprintZeroLanding() {
-  const { user, logout } = useAuth();
-  if (!user) return null;
-  return (
-    <main className="min-h-screen bg-page text-ink flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Nacova — Sprint 0 (Setup Siap)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-sec">
-            Autentikasi aktif sebagai <strong className="text-ink">{user.name}</strong> ({user.role}).
-          </p>
-          <Button variant="outline" onClick={() => void logout()}>
-            Keluar
-          </Button>
-        </CardContent>
-      </Card>
-    </main>
-  );
-}
+import { DashboardPage } from "@/pages/DashboardPage";
+import { AttendancePage } from "@/pages/AttendancePage";
+import { RecapPage } from "@/pages/RecapPage";
+import { CustomersPage } from "@/pages/CustomersPage";
+import { UsersPage } from "@/pages/UsersPage";
 
 export function App() {
   return (
@@ -33,13 +15,39 @@ export function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
-            path="/"
             element={
               <ProtectedRoute>
-                <SprintZeroLanding />
+                <AppShell />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/absensi" element={<AttendancePage />} />
+            <Route
+              path="/absensi/rekap"
+              element={
+                <ProtectedRoute roles={["OWNER", "ADMIN"]}>
+                  <RecapPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pelanggan"
+              element={
+                <ProtectedRoute roles={["OWNER", "ADMIN"]}>
+                  <CustomersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/karyawan"
+              element={
+                <ProtectedRoute roles={["OWNER"]}>
+                  <UsersPage />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

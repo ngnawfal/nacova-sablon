@@ -4,11 +4,11 @@
 
 | ID | User Story | Poin | Prioritas | Target Sprint | Jadwal | Status | Catatan PO |
 |---|---|:---:|---|---|---|---|---|
-| US-01 | Login per role | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Belum | JWT cookie + RBAC |
-| US-02 | Kelola akun karyawan | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Belum | OWNER only |
-| US-03 | Absen masuk/pulang | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Belum | BR-01, BR-02 WIB |
-| US-04 | Rekap absensi bulanan | 5 | Must | Sprint 1 | 16–18 Nov 2026 | Belum | BR-03 |
-| US-05 | Data pelanggan | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Belum | BR-11 soft delete |
+| US-01 | Login per role | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Done | JWT cookie + RBAC |
+| US-02 | Kelola akun karyawan | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Done | OWNER only |
+| US-03 | Absen masuk/pulang | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Done | BR-01, BR-02 WIB |
+| US-04 | Rekap absensi bulanan | 5 | Must | Sprint 1 | 16–18 Nov 2026 | Done | BR-03 |
+| US-05 | Data pelanggan | 3 | Must | Sprint 1 | 16–18 Nov 2026 | Done | BR-11 soft delete |
 | US-06 | Data bahan & stok minimum | 3 | Must | Sprint 2 | 19–22 Nov 2026 | Belum | Materials + suppliers |
 | US-07 | Stok masuk & keluar | 5 | Must | Sprint 2 | 19–22 Nov 2026 | Belum | `$transaction` atomic (BR-07) |
 | US-08 | Peringatan stok minimum | 5 | Should | Sprint 2 | 19–22 Nov 2026 | Belum | AC PPT Slide 15: HABIS / MENIPIS / AMAN |
