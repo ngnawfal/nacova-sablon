@@ -7,6 +7,7 @@ import { authRouter } from "./routes/auth.js";
 import { usersRouter } from "./routes/users.js";
 import { attendancesRouter } from "./routes/attendances.js";
 import { customersRouter } from "./routes/customers.js";
+import { materialsRouter } from "./routes/materials.js";
 import { reportsRouter } from "./routes/reports.js";
 
 const app = express();
@@ -29,13 +30,14 @@ app.use(cookieParser());
 app.use(express.json({ limit: "2mb" }));
 
 app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "nacova-backend", sprint: 1 });
+  res.json({ ok: true, service: "nacova-backend", sprint: 2 });
 });
 
 app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/attendances", attendancesRouter);
 app.use("/api/customers", customersRouter);
+app.use("/api/materials", materialsRouter);
 app.use("/api/reports", reportsRouter);
 
 if (process.env.SERVE_FRONTEND === "true") {
@@ -65,5 +67,5 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`Nacova Backend API (Sprint 1) listening on http://127.0.0.1:${PORT}`);
+  console.log(`Nacova Backend API (Sprint 2) listening on http://127.0.0.1:${PORT}`);
 });

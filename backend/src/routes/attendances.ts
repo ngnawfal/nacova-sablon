@@ -7,7 +7,7 @@ import {
   evaluateCheckInStatus,
 } from "../lib/utils/business-rules.js";
 import { getJakartaDateOnly, getJakartaParts } from "../lib/utils/format.js";
-import { workSettingsSchema } from "../lib/validations/attendance.js";
+import { setLeaveSchema, workSettingsSchema } from "../lib/validations/attendance.js";
 
 async function ensureWorkSetting() {
   return prisma.workSetting.upsert({
@@ -51,6 +51,10 @@ attendancesRouter.post("/check-in", requireAuth(), async (req: AuthedRequest, re
     where: { userId_date: { userId, date: today } },
   });
   if (existing) {
+    if (existing.status === "IZIN" || existing.status === "SAKIT" || existing.status === "CUTI") {
+      res.status(400).json({ error: `Status kamu hari ini tercatat ${existing.status}.` });
+      return;
+    }
     res.status(400).json({ error: "Kamu sudah absen masuk hari ini." });
     return;
   }
@@ -160,6 +164,38 @@ attendancesRouter.get("/recap", requireAuth(["OWNER", "ADMIN"]), async (req, res
     rows,
     employees: users.map((u) => ({ id: u.id, name: u.name })),
   });
+});
+
+attendancesRouter.post("/leave", requireAuth(["OWNER", "ADMIN"]), async (req: AuthedRequest, res) => {
+  const parsed = setLeaveSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Input tidak valid" });
+    return;
+  }
+
+  const targetDate = new Date(`${parsed.data.date}T00:00:00.000Z`);
+  const record = await prisma.attendance.upsert({
+    where: { userId_date: { userId: parsed.data.userId, date: targetDate } },
+    update: {
+      status: parsed.data.status,
+      note: parsed.data.note,
+      recordedById: req.user!.id,
+      checkInAt: null,
+      checkOutAt: null,
+      workMinutes: 0,
+    },
+    create: {
+      userId: parsed.data.userId,
+      date: targetDate,
+      status: parsed.data.status,
+      note: parsed.data.note,
+      recordedById: req.user!.id,
+      workMinutes: 0,
+    },
+    select: { id: true },
+  });
+
+  res.json({ ok: true, id: record.id, message: `Status ${parsed.data.status} berhasil disimpan.` });
 });
 
 attendancesRouter.put("/settings", requireAuth(["OWNER"]), async (req, res) => {

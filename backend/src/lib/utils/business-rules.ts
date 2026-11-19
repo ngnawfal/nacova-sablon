@@ -1,6 +1,7 @@
 import { getJakartaParts } from "./format.js";
 
 export type RoleType = "OWNER" | "ADMIN" | "PRODUCTION";
+export type StockLevelStatus = "HABIS" | "MENIPIS" | "AMAN";
 
 export function parseTimeToMinutes(hhmm: string): number {
   const [hStr, mStr] = hhmm.split(":");
@@ -65,4 +66,16 @@ export function countWorkingDaysInMonth(
     if (allowed.has(dayOfWeek)) count++;
   }
   return count;
+}
+
+/**
+ * US-08 (PPT US-07): Stock alert classification.
+ */
+export function evaluateStockLevel(
+  currentStock: number,
+  minStock: number
+): StockLevelStatus {
+  if (currentStock <= 0) return "HABIS";
+  if (currentStock < minStock) return "MENIPIS";
+  return "AMAN";
 }
