@@ -7,6 +7,9 @@ import { AttendancePage } from "@/pages/AttendancePage";
 import { RecapPage } from "@/pages/RecapPage";
 import { CustomersPage } from "@/pages/CustomersPage";
 import { UsersPage } from "@/pages/UsersPage";
+import { StockPage } from "@/pages/StockPage";
+import { StockMutationPage } from "@/pages/StockMutationPage";
+import { StockDetailPage } from "@/pages/StockDetailPage";
 
 export function App() {
   return (
@@ -47,6 +50,16 @@ export function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/stok" element={<StockPage />} />
+            <Route
+              path="/stok/mutasi"
+              element={
+                <ProtectedRoute roles={["OWNER", "ADMIN"]}>
+                  <StockMutationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/stok/:id" element={<StockDetailPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  ArrowLeftRight,
+  Boxes,
   ClipboardList,
   Clock,
   LayoutDashboard,
@@ -28,14 +30,15 @@ interface NavItem {
 
 const GROUP_LABELS: Record<0 | 1 | 2, string> = {
   0: "Operasional",
-  1: "Klien",
+  1: "Gudang & klien",
   2: "Tim",
 };
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Ringkasan", title: "Ringkasan", group: 0, icon: LayoutDashboard, roles: ["OWNER", "ADMIN", "PRODUCTION"], mobilePrimary: true },
   { href: "/absensi", label: "Absensi", title: "Absensi", group: 0, icon: Clock, roles: ["OWNER", "ADMIN", "PRODUCTION"], mobilePrimary: true },
-  { href: "/absensi/rekap", label: "Rekap absensi", title: "Rekap absensi", group: 0, icon: ClipboardList, roles: ["OWNER", "ADMIN"], mobilePrimary: true },
+  { href: "/absensi/rekap", label: "Rekap absensi", title: "Rekap absensi", group: 0, icon: ClipboardList, roles: ["OWNER", "ADMIN"] },
+  { href: "/stok", label: "Stok bahan", title: "Stok bahan", group: 1, icon: Boxes, roles: ["OWNER", "ADMIN", "PRODUCTION"], mobilePrimary: true },
   { href: "/pelanggan", label: "Pelanggan", title: "Pelanggan", group: 1, icon: Users, roles: ["OWNER", "ADMIN"], mobilePrimary: true },
   { href: "/karyawan", label: "Karyawan", title: "Karyawan", group: 2, icon: UserCog, roles: ["OWNER"], mobilePrimary: true },
 ];
@@ -48,7 +51,10 @@ const ROLE_LABEL: Record<RoleType, string> = {
 
 function pageTitle(pathname: string): string {
   const exact = NAV_ITEMS.find((i) => i.href === pathname);
-  return exact ? exact.title : "Nacova";
+  if (exact) return exact.title;
+  if (pathname === "/stok/mutasi") return "Mutasi stok";
+  if (pathname.startsWith("/stok/")) return "Riwayat stok";
+  return "Nacova";
 }
 
 export function AppShell() {
@@ -244,7 +250,7 @@ export function AppShell() {
             <h1 className="text-sm font-medium text-sec truncate">{pageTitle(pathname)}</h1>
           </div>
           <div className="flex items-center gap-2">
-            {pathname !== "/absensi" ? (
+            {!canManage && pathname !== "/absensi" ? (
               <Link
                 to="/absensi"
                 aria-label="Absen"
@@ -253,7 +259,16 @@ export function AppShell() {
                 <Clock strokeWidth={1.5} className="h-4 w-4" />
                 <span className="hidden sm:inline">Absen</span>
               </Link>
-            ) : canManage ? (
+            ) : canManage && (pathname === "/" || (pathname.startsWith("/stok") && pathname !== "/stok/mutasi")) ? (
+              <Link
+                to="/stok/mutasi"
+                aria-label="Mutasi stok"
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-brand w-9 sm:w-auto sm:px-3.5 h-9 text-sm font-medium text-card hover:bg-brand-hover transition-colors duration-150 shrink-0"
+              >
+                <ArrowLeftRight strokeWidth={1.5} className="h-4 w-4" />
+                <span className="hidden sm:inline">Mutasi stok</span>
+              </Link>
+            ) : canManage && pathname === "/absensi" ? (
               <Link
                 to="/absensi/rekap"
                 aria-label="Rekap absensi"

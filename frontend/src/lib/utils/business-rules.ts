@@ -1,6 +1,7 @@
 import { getJakartaParts } from "./format";
 
 export type RoleType = "OWNER" | "ADMIN" | "PRODUCTION";
+export type StockLevelStatus = "HABIS" | "MENIPIS" | "AMAN";
 
 export function parseTimeToMinutes(hhmm: string): number {
   const [hStr, mStr] = hhmm.split(":");
@@ -56,4 +57,13 @@ export function countWorkingDaysInMonth(
     if (allowed.has(dayOfWeek)) count++;
   }
   return count;
+}
+
+export function evaluateStockLevel(
+  currentStock: number,
+  minStock: number
+): StockLevelStatus {
+  if (currentStock <= 0) return "HABIS";
+  if (currentStock < minStock) return "MENIPIS";
+  return "AMAN";
 }

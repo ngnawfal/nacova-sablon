@@ -3,6 +3,7 @@ import {
   calculateWorkMinutes,
   countWorkingDaysInMonth,
   evaluateCheckInStatus,
+  evaluateStockLevel,
 } from "@/lib/utils/business-rules";
 
 describe("BR-01 / BR-02 / BR-03 Absensi (Sprint 1)", () => {
@@ -22,5 +23,13 @@ describe("BR-01 / BR-02 / BR-03 Absensi (Sprint 1)", () => {
   it("menghitung hari kerja berjalan dalam sebulan untuk perhitungan alpa", () => {
     const cutoff = new Date("2026-11-07T05:00:00.000Z");
     expect(countWorkingDaysInMonth(2026, 11, "1,2,3,4,5,6", cutoff)).toBe(6);
+  });
+});
+
+describe("US-08 / PPT US-07 Peringatan Stok Minimum (Sprint 2)", () => {
+  it("menilai tinta putih 2 L dengan minimum 3 L sebagai MENIPIS", () => {
+    expect(evaluateStockLevel(2, 3)).toBe("MENIPIS");
+    expect(evaluateStockLevel(0, 3)).toBe("HABIS");
+    expect(evaluateStockLevel(3, 3)).toBe("AMAN");
   });
 });
